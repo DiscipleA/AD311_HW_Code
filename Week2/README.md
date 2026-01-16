@@ -51,7 +51,7 @@ Ensure you have [Node.js](https://nodejs.org/) installed, then run the files via
 
 1. **Clone the repository:**
    ```bash
-   git clone <your-repo-link>
+   git clone https://github.com/DiscipleA/AD311_HW_Code/tree/main/Week2
    ```
 
 2. **Run the scripts:**
