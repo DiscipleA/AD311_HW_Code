@@ -57,8 +57,7 @@ Ensure you have [Node.js](https://nodejs.org/) installed on your machine.
 
 1. **Clone the Repository**:
    ```bash
-   git clone <your-repository-url>
-   cd <your-repository-folder>
+   git clone https://github.com/DiscipleA/AD311_HW_Code/tree/main/Week2_Interview_Code
    ```
 2. **Run Assignment 1 & 2**:
     ```bash
