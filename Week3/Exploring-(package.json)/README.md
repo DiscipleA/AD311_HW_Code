@@ -31,6 +31,7 @@ This project is a simple Node.js application created to explore and understand t
 ### 1) Install dependencies
 ```bash
 npm install
+npm install express
 ```
 
 ### 2) Start the application
