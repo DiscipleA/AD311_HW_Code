@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<!Quarter Project of Choice for IT102 - is a Business web form for Investment decisions based on Accounting Equations' calculations>
+<!Create a Form with div objects in html format for content on a form to be divided in four sections of the Accounting Equations>
+<!Create hiden tables in html for text fields to alighn parallel for content to be entered in and displayed upon submission>
+<!Create text fields with validation code behind to accept only digits and display calculations upon submission (zero values if the fields are empty)>
+<!Create tooltip object (popup box) tied to the text fields with guidance for the user instructions on the content input.>
+<!Create visible table at the bottom of the form (also part of the form) to sync the calculations from the fields to calculate parts of Z-score.>
+<!Create Z-score box at the top of the form to add up all of the calculated synced calculated cells at the bottom of the form.>
+<!The web form needs to be validated for numerals only, alert needs to be inplace for proper input (no commas or letters).>
+
+<html>
+
+<body bgcolor="lightgrey">
+<style> 
+.tooltip {/*tooltip positioning and a form structure settings*/
+  position: relative;
+  display: inline-block;
+}
+
+.tooltip .tooltiptext {/*tooltip format and infrastructure settings*/
+  visibility: hidden;
+  width: 300px;
+  background-color: darkgrey;
+  color: #fff;
+  text-align: left;
+  border-radius: 4px;
+  padding: 3px 0;
+  position: absolute;
+  z-index: 1;
+  top: -5px;
+  left: 77%
+}
+
+.tooltip .tooltiptext::after {/*tooltip text appearance and content alignment settings*/ 
+  content: "";
+  position: absolute;
+  top: 50%;
+  opacity: 0.1;
+  right: 100%;
+  border-width: 5px;
+  border-style: solid;
+  border-color: transparent darkgrey transparent transparent;
+}
+
+.tooltip:hover .tooltiptext {/*tooltip visibility settings*/
+  visibility: visible;
+}
+p.indent {/*form's default text indent settings*/ 
+    text-indent: 80px;
+}
+table, th, td {/*table default settings*/
+  border:2px solid lightgrey;
+  border-collapse: collapse;
+}
+
+</style>
+
+<!--{% if error_message %}
+    <p style="color: red;">{{ error_message }}</p>
+    {% endif %}-->
+
+<form id= "Form" action="result/" method="POST"><!Form declaration with id assignment>
+
+{% csrf_token %}
+
+<table  style="width:100%"><!table to align head title of the form and Z-score placement in box top-right of the form.>
+   <tr>
+    <td style="width: 475px; height: 15px; text-align: left; font-size: 30px; font-weight:bold;">FINANCIAL RATIOS FORM</td>
+    <!-- <td style="width: 60px; height: 30px; text-align: left"></td> -->
+    <td class = "tooltip" style="width: 180px; height: 15px"><input type="text" name="CompName" id="CompName" onBlur="fieldCheck(this)" placeholder="Company Name">
+    <td class = "tooltip" style="width: 180px; height: 15px"><input type="text" name="NAICScode" id="NAICScode" onBlur="fieldCheck(this)" placeholder="NAICS Code">
+    <td class = "tooltip" style="width: 180px; height: 15px"><input type="text" name="IndstrName" id="IndstrName" onBlur="fieldCheck(this)" placeholder="Industry Name">
+    <td class = "tooltip" style="width: 180px; height: 15px"><input type="text" name="FiscalYear" id="FiscalYear" onBlur="fieldCheck(this)" placeholder="Fiscal Year">
+    <td style="width: 165px; height: 30px; text-align: right; font-size: 30px; font-weight:bold;">Z-Score:</td>   
+    <td bgcolor="white" style="width: 75px; height: 30px; text-align: right; font-size: 30px; padding: 15px; border:3px solid #707070; font-weight:bold;" id="Z-Score"></td><!settings for the Z-score box for calculation appearance.>
+    <td style="width: 125px; height: 30px; text-align: left"></td>
+  </tr>
+</table>
+
+<div style="background-color:orange;color:#707070;padding:1px;"><!settings for the first set of ratios related to company liquidity - title below.>
+<h2>LIQUIDITY</h2>
+</div>
+
+<table  style="width:100%"><!table settings of the current ratio for liquidity, and related code below>
+  <tr bordercolor="orange">
+    <td style="width: 350px; height: 15px; font-weight:bold;">Current Assets:</td>
+    <td class = "tooltip" style="width: 180px; height: 15px"><input type="text" name="CurrAsts" id="CurrAsts" onBlur="fieldCheck(this)" placeholder="Current Assets">
+    <span class="tooltiptext">=><a href="https://www.investopedia.com/terms/c/currentassets.asp" target="_blank">Current Assets</a> account is a balance sheet line item listed under the Assets section, and are accounts for all company-owned assets that can be converted to cash within one year. Assets whose value is recorded in the Current Assets account are considered current assets.</span>
+    </td>
+    <td style="width: 350px; height: 15px; font-weight:bold;">Current Liabilities:</td>
+    <td class = "tooltip" style="width: 180px; height: 15px"><input type="text" name="CurrLiab" id="CurrLiab" onBlur="fieldCheck(this)" placeholder="Current Liabilities" onchange="echo('CurrLiab', 'CurrLiab2')">
+    <span class="tooltiptext">=><a href="https://www.investopedia.com/terms/c/currentliabilities.asp" target="_blank">Current Liabilities</a> are a company’s short-term financial obligations that are due within one year or within a normal operating cycle. An operating cycle, also referred to as the cash conversion cycle, is the time it takes a company to purchase inventory and convert it to cash from sales.</span>
+    </td>
+    <td bgcolor="white" style="width: 40px; text-align: center; height: 15px; font-size: 15px; font-weight:bold; border:3px solid #707070;" id="CurRatio"></td><!Current Ratio results displayed in the box upon calculation.>
+  </tr>
+</table>
+
+<table  style="width:100%"><!table settings of the quick ratio for liquidity, and related code below>
+   <tr>
+    <td style="width: 350px; height: 15px; font-weight:bold;">Cash, short-term investments, and net receivables:</td>
+    <td class = "tooltip" style="width: 180px; height: 15px"><input type="text" name="CashEquiv" id="CashEquiv" onBlur="fieldCheck(this)" placeholder="Cash Equivalents">
+    <span class="tooltiptext">=><a href="https://www.investopedia.com/terms/c/cashandcashequivalents.asp" target="_blank">Cash and Cash Equivalents</a> refers to the line item on the balance sheet that reports the value of a company's assets that are cash or can be converted into cash immediately. Cash equivalents include bank accounts and marketable securities, which are debt securities with maturities of less than 90 days. However, oftentimes cash equivalents do not include equity or stock holdings because they can fluctuate in value.<br>=><a href="https://www.investopedia.com/terms/s/shorterminvestments.asp" target="_blank">Short-Term investments</a>, also known as marketable securities or temporary investments, are financial investments that can easily be converted to cash, typically within five years. Many short-term investments are sold or converted to cash after a period of only three-12 months.<br>=><a href="https://www.investopedia.com/terms/n/netreceivables.asp" target="_blank">Net Receivables</a> are the total money owed to a company by its customers minus the money owed that will likely never be paid. Net receivables are often expressed as a percentage, and a higher percentage indicates a business has a greater ability to collect from its customers.</span>
+    </td>
+    <td style="width: 350px; height: 15px; font-weight:bold;">Current Liabilities:</td>
+    <td class = "tooltip" style="width: 180px; height: 15px"><input type="text" name="CurrLiab2" id="CurrLiab2" onBlur="fieldCheck(this)" placeholder="Current Liabilities" onchange="echo('CurrLiab2', 'CurrLiab')">
+    <span class="tooltiptext">=><a href="https://www.investopedia.com/terms/c/currentliabilities.asp" target="_blank">Current Liabilities</a> are a company’s short-term financial obligations that are due within one year or within a normal operating cycle. An operating cycle, also referred to as the cash conversion cycle, is the time it takes a company to purchase inventory and convert it to cash from sales.</span>
+    </td>   
+    <td bgcolor="white" style="width: 40px; text-align: center; height: 15px; font-size: 15px; font-weight:bold; border:3px solid #707070;" id="QuickRatio"></td><!Quick Ratio results displayed in the box upon calculation.>
+  </tr>
+</table>
+
+<table  style="width:100%"><!table for Cash to Debt coverage ratio for liquidity, and related code below>
+  <tr>
+    <td style="width: 350px; height: 15px; font-weight:bold;">Net cash provided by operating activities:</td>
+    <td class = "tooltip" style="width: 180px; height: 15px"><input type="text" name="NetCashOpt" id="NetCashOpt" onBlur="fieldCheck(this)" placeholder="Cash from Operations" onchange="echo('NetCashOpt', 'NetCashOpt2')">
+    <span class="tooltiptext">=><a href="https://www.investopedia.com/terms/c/cash-flow-from-operating-activities.asp" target="_blank">Cash Flow from Operating activities</a> (CFO) indicates the amount of money a company brings in from its ongoing, regular business activities, such as manufacturing and selling goods or providing a service to customers. It is the first section depicted on a company's cash flow statement.</span>
+    </td>
+    <td style="width: 350px; height: 15px; font-weight:bold;">Average Current Liabilities:</td>
+    <td class = "tooltip" style="width: 180px; height: 15px"><input type="text" name="AvgCurrLiab" id="AvgCurrLiab" onBlur="fieldCheck(this)" placeholder="Avg. Current Liabilities">
+    <span class="tooltiptext">=><a href="https://www.fincash.com/l/basics/current-liabilities" target="_blank">Average Current Liabilities</a> refer to the average value of a company’s short-term liabilities from the beginning balance sheet period to its ending period.<b><u>(Total current liabilities at the beginning of the period plus Total current liabilities at the end of the period) divided by 2.</u></b></span>
+    </td>   
+    <td bgcolor="white" style="width: 40px; text-align: center; height: 15px; font-size: 15px; font-weight:bold; border:3px solid #707070;" id="CashDebtCov"></td><!Cash to Debt coverage Ratio results displayed in the box upon calculation.>
+  </tr>
+</table>
+
+<br><div style="background-color:lightblue;color:#EE4B2B;padding:1px;"><!settings for the third Activity title of ratios related to company activity - title below>
+<h2>ACTIVITY</h2>
+</div>
+
+<table  style="width:100%"><!table for Accounts Receivable Turnover ratio for activity, and related code below>
+   <tr>
+    <td style="width: 350px; height: 15px; font-weight:bold;">Net Sales:</td>
+    <td class = "tooltip" style="width: 180px; height: 15px"><input type="text" name="NetSales" id="NetSales" onBlur="fieldCheck(this)" placeholder="NetSales" onchange="echo('NetSales', 'NetSales2', 'NetSales3')">
+    <span class="tooltiptext">=><a href="https://www.investopedia.com/terms/n/netsales.asp" target="_blank">Net Sales</a> is the sum of a company's <a href="https://www.investopedia.com/terms/g/grosssales.asp" target="_blank">Gross_Sales</a> minus its returns, allowances, and discounts. Net sales calculations are not always transparent externally, and is used for calculating <a href="https://www.investopedia.com/terms/r/receivableturnoverratio.asp" target="_blank">ARTR</a>. They can often be factored into the reporting of top line revenues reported on the income statement.</span>
+    </td>
+    <td style="width: 350px; height: 15px; font-weight:bold;">Average Trade Receivables(net):</td>
+    <td class = "tooltip" style="width: 180px; height: 15px"><input type="text" name="AvgRec" id="AvgRec" onBlur="fieldCheck(this)" placeholder="Average Trade Receivables">
+    <span class="tooltiptext">=><a href="https://www.accountingtools.com/articles/average-net-receivables" target="_blank">Average Net Receivables</a> is the multi-period average of accounts receivable ending balances, netted against the average allowance for doubtful accounts for the same periods. The formula is: <b><u>(Net receivables for current period plus Net receivables for preceding period) divided by 2.</u></b></span>
+    </td>   
+    <td bgcolor="white" style="width: 40px; text-align: center; height: 15px; font-size: 15px; font-weight:bold; border:3px solid #707070;" id="AcctRecTurnover"></td><!Accounts Receivable Turnover Ratio results displayed in the box upon calculation.>
+  </tr>
+</table>
+
+<table  style="width:100%"><!table for Inventory Turnover ratio for activity, and related code below>
+  <tr>
+    <td style="width: 350px; height: 15px; font-weight:bold;">Cost Of Goods Sold:</td>
+    <td class = "tooltip" style="width: 180px; height: 15px"><input type="text" name="COGS" id="COGS" onBlur="fieldCheck(this)" placeholder="COGS">
+    <span class="tooltiptext">=><a href="https://www.investopedia.com/terms/c/cogs.asp" target="_blank">Cost of goods sold (COGS)</a> is the cost of acquiring or manufacturing the products that a company sells during a period, so the only costs included in the measure are those that are directly tied to the production of the products, including the cost of labor, materials, and manufacturing overhead.</span>
+    </td>
+    <td style="width: 350px; height: 15px; font-weight:bold;">Average Inventory:</td>
+    <td class = "tooltip" style="width: 180px; height: 15px"><input type="text" name="AvgInv" id="AvgInv" onBlur="fieldCheck(this)" placeholder="Average Inventory">
+    <span class="tooltiptext">=><a href="https://www.investopedia.com/terms/a/average-inventory.asp" target="_blank">Average Inventory</a> is a calculation that estimates the value or number of a particular good or set of goods during two or more specified time periods. Average inventory is the <a href="https://keydifferences.com/difference-between-mean-and-median.html" target="_blank">mean</a> value of inventory within a certain time period, which may vary from the median value of the same data set, and is computed by averaging the starting and ending inventory values over a specified period.</span>
+    </td>   
+    <td bgcolor="white" style="width: 40px; text-align: center; height: 15px; font-size: 15px; font-weight:bold; border:3px solid #707070;" id="InvTurnover"></td><!Inventory Turnover Ratio results displayed in the box upon calculation.>
+  </tr>
+</table>
+
+<table  style="width:100%"><!table of the Total Assets Turnover ratio for activity, and related code below>
+   <tr>
+    <td style="width: 350px; height: 15px; font-weight:bold;">Net Sales:</td>
+    <td class = "tooltip" style="width: 180px; height: 15px"><input type="text" name="NetSales2" id="NetSales2" onBlur="fieldCheck(this)" placeholder="NetSales" onchange="echo('NetSales2', 'NetSales3', 'NetSales')">
+    <span class="tooltiptext">=><a href="https://www.investopedia.com/terms/n/netsales.asp" target="_blank">Net Sales</a> is the sum of a company's <a href="https://www.investopedia.com/terms/g/grosssales.asp" target="_blank">Gross_Sales</a> minus its returns, allowances, and discounts. Net sales calculations are not always transparent externally, and is used for calculating <a href="https://www.investopedia.com/terms/a/assetturnover.asp" target="_blank">ATR</a>. They can often be factored into the reporting of top line revenues reported on the income statement.</span>
+    </td>
+    <td style="width: 350px; height: 15px; font-weight:bold;">Average Total Assets:</td>
+    <td class = "tooltip" style="width: 180px; height: 15px"><input type="text" name="AvgAsts" id="AvgAsts" onBlur="fieldCheck(this)" placeholder="Average Total Assets" onchange="echo('AvgAsts', 'AvgAsts2')">
+    <span class="tooltiptext">=><a href="https://fundsnetservices.com/average-total-assets" target="_blank">Average Total Assets</a> refer to a company’s total assets of the previous accounting period and the current period. Total Assets include all current and noncurrent assets of the company as of the end of the accounting period (both current and previous) and other assets. The formula is: <b><u>(Total Assets of the Current Year plus Total Assets of Previous Year) divided by 2.</u></b></span>
+    </td>   
+    <td bgcolor="white" style="width: 40px; text-align: center; height: 15px; font-size: 15px; font-weight:bold; border:3px solid #707070;" id="AstsTurnover"></td><!Total Assets Turnover Ratio results displayed in the box upon calculation.>
+  </tr>
+</table>
+
+<br><div style="background-color:lightyellow;color:#800020;padding:1px;"><!settings for the third Profitability title of ratios related to company profitability - title below>
+<h2>PROFITABILITY</h2>
+</div>
+
+<table  style="width:100%"><!table of the Profit Margin Ratio for profitability, and related code below>
+   <tr>
+    <td style="width: 350px; height: 15px; font-weight:bold;">Net Income:</td>
+    <td class = "tooltip" style="width: 180px; height: 15px"><input type="text" name="NetIncome" id="NetIncome" onBlur="fieldCheck(this)" placeholder="Net Income" onchange="echo('NetIncome', 'NetIncome2', 'NetIncome3' )">
+    <span class="tooltiptext">=><a href="https://www.investopedia.com/terms/n/netincome.asp" target="_blank">Net income (NI)</a>, also called net earnings, is calculated as sales minus <a href="https://www.investopedia.com/terms/c/cogs.asp" target="_blank">cost of goods sold</a>, selling, general and administrative expenses, operating expenses, depreciation, interest, taxes, and other expenses. It is a useful number for investors to assess how much revenue exceeds the expenses of an organization. This number appears on a company's income statement and is also an indicator of a company's profitability.</span>
+    </td>
+    <td style="width: 350px; height: 15px; font-weight:bold;">Net Sales:</td>
+    <td class = "tooltip" style="width: 180px; height: 15px;"><input type="text" name="NetSales3" id="NetSales3" onBlur="fieldCheck(this)" placeholder="Net Sales" onchange="echo('NetSales3', 'NetSales', 'NetSales2')">
+    <span class="tooltiptext">=><a href="https://www.investopedia.com/terms/n/netsales.asp" target="_blank">Net Sales</a> is the sum of a company's <a href="https://www.investopedia.com/terms/g/grosssales.asp" target="_blank">Gross_Sales</a> minus its returns, allowances, and discounts. Net sales calculations are not always transparent externally, and is used for calculating <a href="https://www.investopedia.com/terms/p/profitmargin.asp" target="_blank">PMR</a>. They can often be factored into the reporting of top line revenues reported on the income statement.</span>
+    </td>   
+    <td bgcolor="white" style="width: 40px; text-align: center; height: 15px; font-size: 15px; font-weight:bold; border:3px solid #707070;" id="ProfitMargin"></td><!Profit Margin Ratio results displayed in the box upon calculation.>
+  </tr>
+</table>
+
+<table  style="width:100%"><!table of the Return On Assets Ratio for profitability, and related code below>
+  <tr>
+    <td style="width: 350px; height: 15px; font-weight:bold;">Net Income:</td>
+    <td class = "tooltip" style="width: 180px; height: 15px"><input type="text" name="NetIncome2" id="NetIncome2" onBlur="fieldCheck(this)" placeholder="Net Income" onchange="echo('NetIncome2', 'NetIncome3', 'NetIncome' )">
+    <span class="tooltiptext">=><a href="https://www.investopedia.com/terms/n/netincome.asp" target="_blank">Net income (NI)</a>, also called net earnings, is calculated as sales minus <a href="https://www.investopedia.com/terms/c/cogs.asp" target="_blank">cost of goods sold</a>, selling, general and administrative expenses, operating expenses, depreciation, interest, taxes, and other expenses. It is a useful number for investors to assess how much revenue exceeds the expenses of an organization. This number appears on a company's income statement and is also an indicator of a company's profitability.</span>
+    </td>
+    <td style="width: 350px; height: 15px; font-weight:bold;">Average Total Assets:</td>
+    <td class = "tooltip" style="width: 180px; height: 15px;"><input type="text" name="AvgAsts2" id="AvgAsts2" onBlur="fieldCheck(this)" placeholder="Average Total Assets" onchange="echo('AvgAsts2', 'AvgAsts')">
+    <span class="tooltiptext">=><a href="https://fundsnetservices.com/average-total-assets" target="_blank">Average Total Assets</a> refer to a company’s total assets of the previous accounting period and the current period. Total Assets include all current and noncurrent assets of the company as of the end of the accounting period (both current and previous) and other assets. The formula is: <b><u>(Total Assets of the Current Year plus Total Assets of Previous Year) divided by 2.</span>
+    </td>   
+    <td bgcolor="white" style="width: 40px; text-align: center; height: 15px; font-size: 15px; font-weight:bold; border:3px solid #707070;" id="ReturnOnAssets"></td><!Return On Assets Ratio results displayed in the box upon calculation.>
+  </tr>
+</table>
+
+<table  style="width:100%"><!table of the Price Earnings Ratio for profitability, and related code below>
+   <tr>
+    <td style="width: 350px; height: 15px; font-weight:bold;">Market Price Of Stock:</td>
+    <td class = "tooltip" style="width: 180px; height: 15px"><input type="text" name="MrktPrcStk" id="MrktPrcStk" onBlur="fieldCheck(this)" placeholder="Market Price Of Stock">
+    <span class="tooltiptext">=><a href="https://www.investopedia.com/articles/stocks/08/stock-prices-fool.asp" target="_blank">Market Price of Stock</a> is the price that a stock sells for on the open market at a given point in time. The market price will usually fluctuate throughout the trading day as investors buy and sell stocks. The market price will rise if more people want to buy it and fall as people begin selling more of the stock. Be aware, however, that the market price isn't necessarily an accurate indicator of a stock's value.</span>
+    </td>
+    <td style="width: 350px; height: 15px; font-weight:bold;">Earnings Per Share:</td>
+    <td class = "tooltip" style="width: 180px; height: 15px"><input type="text" name="ErnPerShr" id="ErnPerShr" onBlur="fieldCheck(this)" placeholder="Earnings Per Share">
+    <span class="tooltiptext">=><a href="https://www.investopedia.com/terms/e/eps.asp" target="_blank">Earnings per share (EPS)</a> is calculated as a company's profit divided by the outstanding shares of its common stock. The resulting number serves as an indicator of a company's profitability. It is common for a company to report EPS that is adjusted for extraordinary items and potential share dilution.</span>
+    </td>   
+    <td bgcolor="white" style="width: 40px; text-align: center; height: 15px; font-size: 15px; font-weight:bold; border:3px solid #707070;" id="PriceEarnings"></td><!Price Earnings Ratio results displayed in the box upon calculation.>
+  </tr>
+</table>
+
+<table  style="width:100%"><!table of the Payout Ratio for profitability, and related code below>
+   <tr>
+    <td style="width: 350px; height: 15px; font-weight:bold;">Cash Dividends:</td>
+    <td class = "tooltip" style="width: 180px; height: 15px"><input type="text" name="CashDiv" id="CashDiv" onBlur="fieldCheck(this)" placeholder="Cash Dividends">
+    <span class="tooltiptext">=><a href="https://www.investopedia.com/terms/c/cashdividend.asp" target="_blank">Cash Dividend</a> is a payment made by a company to its stockholders in the form of periodic distributions of cash (as opposed to in stock or any other form).</span>
+    </td>
+    <td style="width: 350px; height: 15px; font-weight:bold;">Net Income:</td>
+    <td class = "tooltip" style="width: 180px; height: 15px"><input type="text" name="NetIncome3" id="NetIncome3" onBlur="fieldCheck(this)" placeholder="Net Income" onchange="echo('NetIncome3', 'NetIncome', 'NetIncome2' )">
+    <span class="tooltiptext">=><a href="https://www.investopedia.com/terms/n/netincome.asp" target="_blank">Net income (NI)</a>, also called net earnings, is calculated as sales minus <a href="https://www.investopedia.com/terms/c/cogs.asp" target="_blank">cost of goods sold</a>, selling, general and administrative expenses, operating expenses, depreciation, interest, taxes, and other expenses. It is a useful number for investors to assess how much revenue exceeds the expenses of an organization. This number appears on a company's income statement and is also an indicator of a company's profitability.</span>
+    </td>   
+    <td bgcolor="white" style="width: 40px; text-align: center; height: 15px; font-size: 15px; font-weight:bold; border:3px solid #707070;" id="PayoutRatio"></td><!Payout Ratio results displayed in the box upon calculation.>
+  </tr>
+</table>
+
+<br><div style="background-color:#36454F;color:lightblue;padding:1px;"><!settings for the fourth Coverage title of ratios related to company coverage - title below>
+<h2>COVERAGE</h2>
+</div>
+
+<table  style="width:100%"><!table of the Debt to Assets Ratio for Coverage, and related code below>
+  <tr>
+    <td style="width: 350px; height: 15px; font-weight:bold;">Total Liabilities:</td>
+    <td class = "tooltip" style="width: 180px; height: 15px;"><input type="text" name="TotLiab" id="TotLiab" onBlur="fieldCheck(this)" placeholder="Total Liabilities">
+    <span class="tooltiptext">=><a href="https://www.investopedia.com/terms/t/total-liabilities.asp" target="_blank">Total Liabilities</a> are the combined debts and obligations that an individual or company owes to outside parties. Everything the company owns is classified as an asset and all amounts the company owes for future obligations are recorded as liabilities. On the balance sheet, total assets minus total liabilities equals equity.</span>
+    </td>
+    <td style="width: 350px; height: 15px; font-weight:bold;">Total Assets:</td>
+    <td class = "tooltip" style="width: 180px; height: 15px"><input type="text" name="TotAsts" id="TotAsts" onBlur="fieldCheck(this)" placeholder="Total Assets">
+    <span class="tooltiptext">=><a href="https://www.investopedia.com/terms/t/total-liabilities.asp" target="_blank">Total Assets</a> refers to the total amount of assets owned by a person or entity. Assets are items of economic value, which are expended over time to yield a benefit for the owner. If the owner is a business, these assets are usually recorded in the accounting records and appear in the balance sheet of the business.</span>
+    </td>   
+    <td bgcolor="white" style="width: 40px; text-align: center; height: 15px; font-size: 15px; font-weight:bold; border:3px solid #707070;" id="DebtToAsts"></td><!Debt to Assets results displayed in the box upon calculation.>
+  </tr>
+</table>
+
+<table  style="width:100%"><!table of the Times Interest Earned Ratio for Coverage, and related code below>
+   <tr>
+    <td style="width: 350px; height: 15px; font-weight:bold;">EBIT:</td>
+    <td class = "tooltip" style="width: 180px; height: 15px"><input type="text" name="EBIT" id="EBIT" onBlur="fieldCheck(this)" placeholder="EBIT">
+    <span class="tooltiptext">=><a href="https://www.investopedia.com/terms/e/ebit.asp" target="_blank">Earnings Before Interest & Taxes</a> (EBIT) is an indicator of a company's profitability. EBIT can be calculated as revenue minus expenses excluding tax and interest. EBIT is also referred to as operating earnings, operating profit, and profit before interest and taxes.</span>
+    </td>
+    <td style="width: 350px; height: 15px; font-weight:bold;">Interest Expense:</td>
+    <td class = "tooltip" style="width: 180px; height: 15px"><input type="text" name="IntrstExp" id="IntrstExp" onBlur="fieldCheck(this)" placeholder="Interest Expense">
+    <span class="tooltiptext">=><a href="https://www.investopedia.com/terms/i/interestexpense.asp" target="_blank">Interest Expense</a> is a <u>non-operating expense</u> shown on the income statement. It represents interest payable on any borrowings—bonds, loans, convertible debt or lines of credit. It is essentially calculated as the interest rate times the outstanding principal amount of the debt. Interest expense on the income statement represents interest accrued during the period covered by the financial statements, and not the amount of interest paid over that period.</span>
+    </td>   
+    <td bgcolor="white" style="width: 40px; text-align: center; height: 15px; font-size: 15px; font-weight:bold; border:3px solid #707070;" id="TimesInterestEarned"></td><!Times Interest Earned ratio results displayed in the box upon calculation.>
+  </tr>
+</table>
+
+<table  style="width:100%"><!table of the Debt with Cash Coverage Ratio for Coverage set of ratios, and related code below>
+   <tr>
+    <td style="width: 350px; height: 15px; font-weight:bold;">Net cash provided by operating activities:</td>
+    <td class = "tooltip" style="width: 180px; height: 15px"><input type="text" name="NetCashOpt2" id="NetCashOpt2" onBlur="fieldCheck(this)" placeholder="Cash from Operations" onchange="echo('NetCashOpt2', 'NetCashOpt')">
+    <span class="tooltiptext">=><a href="https://www.investopedia.com/terms/c/cash-flow-from-operating-activities.asp" target="_blank">Cash Flow from Operating activities</a> (CFO) indicates the amount of money a company brings in from its ongoing, regular business activities, such as manufacturing and selling goods or providing a service to customers. It is the first section depicted on a company's cash flow statement.</span>
+    </td>
+    <td style="width: 350px; height: 15px; font-weight:bold;">Average Total Liabilities:</td>
+    <td class = "tooltip" style="width: 180px; height: 15px;"><input type="text" name="AvgLiab" id="AvgLiab" onBlur="fieldCheck(this)" placeholder="Avg. Total Liabilities">
+    <span class="tooltiptext">=><a href="https://www.lawinsider.com/dictionary/average-total-liabilities" target="_blank">Average Total Liabilities</a> means for any calendar month the sum of (a) average consolidated funded Indebtedness of the Parent for such month, plus (b) all other consolidated liabilities of the Parent, determined in accordance with GAAP, as of the last day of such month; provided, however, that for purposes of this definition of "Average Total Liabilities," the terms "Indebtedness" and "liabilities" shall in no event include any Subordinated Debt so long as there does not exist a default with respect to such Subordinated Debt.</span>
+    </td>   
+    <td bgcolor="white" style="width: 40px; text-align: center; height: 15px; font-size: 15px; font-weight:bold; border:3px solid #707070;" id="CashDebtCover"></td><!Debt with Cash Coverage ratio results displayed in the box upon calculation.>
+  </tr>
+</table>
+
+<table  style="width:100%"><!table of the Book Value Per Share Ratio for Coverage set of ratios, and related code below>
+   <tr>
+    <td style="width: 350px; height: 15px; font-weight:bold;">Common Stockholders' Equity:</td>
+    <td class = "tooltip" style="width: 180px; height: 15px"><input type="text" name="ComStockEquity" id="ComStockEquity" onBlur="fieldCheck(this)" placeholder="Common Stockholders' Equity">
+    <span class="tooltiptext">=><a href="https://www.investopedia.com/terms/s/stockholdersequity.asp" target="_blank">Common Stockholders' Equity</a> is the stock owned by the founders, employees and all other shareholders of a company. It is basically a number of investments held by shareholders in a company. It includes ordinary shares, retained earnings, and any other additional paid-in capital. It excludes <a href="https://www.investopedia.com/ask/answers/difference-between-preferred-stock-and-common-stock/" target="_blank">Preferred Shares</a> or any other related interest with preferred equity statuses such as partnership interests or limited liability units. Common Equity is <u>(Shareholder’s Equity minus Preference Shares.)</u></span>
+    </td>
+    <td style="width: 350px; height: 15px; font-weight:bold;">Outstanding Shares:</td>
+    <td class = "tooltip" style="width: 180px; height: 15px"><input type="text" name="OutstndShares" id="OutstndShares" onBlur="fieldCheck(this)" placeholder="Outstanding Shares">
+    <span class="tooltiptext">=><a href="https://www.investopedia.com/terms/o/outstandingshares.asp" target="_blank">Shares Outstanding</a> refer to a company's stock currently held by all its shareholders, including share blocks held by institutional investors and restricted shares owned by the company’s officers and insiders. Outstanding shares are shown on a company’s balance sheet under the heading “Capital Stock.”</span>
+    </td>   
+    <td bgcolor="white" style="width: 40px; text-align: center; height: 15px; font-size: 15px; font-weight:bold; border:3px solid #707070;" id="BookValuePerShare"></td><!Book Value Per Share ratio results displayed in the box upon calculation.>
+  </tr>
+</table>
+
+<table  style="width:100%;">
+   <tr>
+   <td style="width: 1100px; height: 10px; font-size: 10px;"></td><!Blank table for space to indicate brk between z-score calculations and rest of the equations.>
+   </tr>
+</table>
+
+<table  style="width:100%;"><!table for headings of the z-score calculations.>
+   <tr style = "border:2px solid white;">
+    <td bgcolor="#707070" style="width: 220px; height: 30px; text-align: center; font-size: 20px; color: white; border:2px solid white; font-weight:bold;">Short-term Solvency</td>
+    <td bgcolor="#707070" style="width: 220px; height: 30px; text-align: center; font-size: 20px; color: white; border:2px solid white; font-weight:bold;">RE/TA</td>
+    <td bgcolor="#707070" style="width: 220px; height: 30px; text-align: center; font-size: 20px; color: white; border:2px solid white; font-weight:bold;">Leverage</td>
+    <td bgcolor="#707070" style="width: 220px; height: 30px; text-align: center; font-size: 20px; color: white; border:2px solid white; font-weight:bold;">Assets Turnover</td>   
+    <td bgcolor="#707070" style="width: 220px; height: 30px; text-align: center; font-size: 20px; color: white; border:2px solid white; font-weight:bold;">Debt to Equity</td>
+  </tr>
+</table>
+
+<table  style="width:100%;"><!table for results of the z-score calculations.>
+   <tr style = "border:2px solid white;">
+    <td bgcolor="white" style="width: 220px; height: 30px; text-align: center; font-size: 30px; font-weight:bold; border:2px solid #707070;" id="WorkCap/Tot_Asts"></td>
+    <td bgcolor="white" style="width: 220px; height: 30px; text-align: center; font-size: 30px; font-weight:bold; border:2px solid #707070;"id="RetainEarn/Tot_Asts"></td>
+    <td bgcolor="white" style="width: 220px; height: 30px; text-align: center; font-size: 30px; font-weight:bold; border:2px solid #707070;" id="EBIT/Tot_Asts"></td>
+    <td bgcolor="white" style="width: 220px; height: 30px; text-align: center; font-size: 30px; font-weight:bold; border:2px solid #707070;" id="Sales/Tot_Asts"></td>   
+    <td bgcolor="white" style="width: 220px; height: 30px; text-align: center; font-size: 30px; font-weight:bold; border:2px solid #707070;" id="MVEquity/Tot_Liab"></td>
+  </tr>
+</table>
+
+<center>
+
+<input type= "button" value= "View Results" onclick= "Results(), Comp_Data()" style="width: 110px; text-align: center; height: 30px; font-size: 15px; font-weight:bold;"><!button to view results>
+<input type= "submit" value= "Submit" onclick= "Results(), Comp_Data()" style="width: 110px; text-align: center; height: 30px; font-size: 15px; font-weight:bold;">
+<input type= "button" onclick= "clearInput()" value= "Clear Form" style="width: 95px; text-align: center; height: 30px; font-size: 15px; font-weight:bold;"><!button to clear the fields.>
+</center>
+</form>
+</body>
+
+<script>
+
+function clearFormFields() {
+	var form = document.querySelector('form');
+	if (form) {
+		form.reset();
+		}
+        }
+
+window.onload = clearFormFields;
+
+function echo(idname, idname2, idname3) {//for transparency purposes this function is to echo value in the field to the field intended for the same value
+      var idname = document.getElementById(idname).value;
+      document.getElementById(idname2).value = idname;
+      document.getElementById(idname3).value = idname;
+
+      }
+
+function Comp_Data(){
+      var com_name = document.getElementById("CompName").value;
+      var naics_code = document.getElementById("NAICScode").value;
+      var indstr_name = document.getElementById("IndstrName").value;
+      var fiscal_year = document.getElementById("FiscalYear").value;
+      if (com_name.match(/^[A-Za-z\s]+$/) || indstr_name.match(/^[A-Za-z\s]+$/)) {}
+      else {
+      alert("Please DO NOT ENTER NUMERICALS in Company & Industry Name fields.");
+      }
+      if (naics_code.match(/[^$.\d]/) || fiscal_year(/[^$.\d]/)) {
+      alert("Please enter numerals without commas in all the NECESSARY NUMARICAL fields.");
+      }
+      if (com_name == "" || indstr_name == "" || naics_code == "" || fiscal_year == "") {
+      alert("Please ENTER Necessary information for Company & Industry.");
+      }
+      }		
+function Results(){//function to invoke variables for the input fields and to calculations based on inputed values - declared variables below are name oriented to the fields. 
+      var cur_asts = document.getElementById("CurrAsts").value;
+      var cur_lib = document.getElementById("CurrLiab").value;
+      var cash_equiv = document.getElementById("CashEquiv").value;
+      var cur_lib2 = document.getElementById("CurrLiab2").value;
+      var net_cash = document.getElementById("NetCashOpt").value;
+      var avg_lib = document.getElementById("AvgCurrLiab").value;
+      var net_sales = document.getElementById("NetSales").value;
+      var avg_rec = document.getElementById("AvgRec").value;
+      var cogs = document.getElementById("COGS").value;
+      var avg_inv = document.getElementById("AvgInv").value;
+      var net_sales2 = document.getElementById("NetSales2").value;
+      var avg_asts = document.getElementById("AvgAsts").value;
+      var net_inc = document.getElementById("NetIncome").value;
+      var net_sales3 = document.getElementById("NetSales3").value;
+      var net_inc2 = document.getElementById("NetIncome2").value;
+      var avg_asts2 = document.getElementById("AvgAsts2").value;
+      var mrkt_pr_stck = document.getElementById("MrktPrcStk").value;
+      var ern_per_shr = document.getElementById("ErnPerShr").value;
+      var cash_div = document.getElementById("CashDiv").value;
+      var net_inc3 = document.getElementById("NetIncome3").value;
+      var tot_liab = document.getElementById("TotLiab").value;
+      var tot_asts = document.getElementById("TotAsts").value;
+      var ebit = document.getElementById("EBIT").value;
+      var intrst_exp = document.getElementById("IntrstExp").value;
+      var net_cash2 = document.getElementById("NetCashOpt2").value;
+      var avg_liab = document.getElementById("AvgLiab").value;
+      var com_stk_eqt = document.getElementById("ComStockEquity").value;
+      var outst_shrs = document.getElementById("OutstndShares").value;
+      var liquidity = (cur_asts - cur_lib) / tot_asts;// variable for short-term solvency calculation
+      var re_ta = (net_inc3 - cash_div) / tot_asts;// variable for retained earnings to total assets calculation
+      var leverage = ebit / tot_asts;// variable for leverage calculation
+      var asts_turnover = (Number(net_sales2) + Number(cogs)) / tot_asts;// variable for assets turnover calculations
+      var debt_to_equity = (mrkt_pr_stck * outst_shrs) / tot_liab;// variable for debt to equity calculations.
+      document.getElementById("WorkCap/Tot_Asts").innerHTML = Math.round((liquidity) * 10000) / 10000;// displayed results with four decimal points for short-term solvency calculation
+      document.getElementById("RetainEarn/Tot_Asts").innerHTML = Math.round((re_ta) * 10000) / 10000;// displayed results with four decimal points for retained earnings to total assets calculation
+      document.getElementById("EBIT/Tot_Asts").innerHTML = Math.round((leverage) * 10000) / 10000;// displayed results with four decimal points for leverage calculation
+      document.getElementById("Sales/Tot_Asts").innerHTML = Math.round((asts_turnover) * 10000) / 10000;// displayed results with four decimal points for assets turnover calculations
+      document.getElementById("MVEquity/Tot_Liab").innerHTML = Math.round((debt_to_equity) * 10000) / 10000;// displayed results with four decimal points for debt to equity calculations.
+      if (cur_asts.match(/[^$.\d]/) || cur_lib.match(/[^$.\d]/) || cash_equiv.match(/[^$.\d]/) || cur_lib2.match(/[^$.\d]/) || net_cash.match(/[^$.\d]/) || avg_lib.match(/[^$.\d]/) || net_sales.match(/[^$.\d]/) || avg_rec.match(/[^$.\d]/) || cogs.match(/[^$.\d]/) || avg_inv.match(/[^$.\d]/) || net_sales2.match(/[^$.\d]/) || avg_asts.match(/[^$.\d]/) || net_inc.match(/[^$.\d]/) || net_sales3.match(/[^$.\d]/) || net_inc2.match(/[^$.\d]/) || avg_asts2.match(/[^$.\d]/) || mrkt_pr_stck.match(/[^$.\d]/) || ern_per_shr.match(/[^$.\d]/) || cash_div.match(/[^$.\d]/) || net_inc3.match(/[^$.\d]/) || tot_liab.match(/[^$.\d]/) || tot_asts.match(/[^$.\d]/) || ebit.match(/[^$.\d]/) || intrst_exp.match(/[^$.\d]/) || net_cash2.match(/[^$.\d]/) || avg_liab.match(/[^$.\d]/) || com_stk_eqt.match(/[^$.\d]/) || outst_shrs.match(/[^$.\d]/)) {//condition if values are entered wrong (charachters and commans).
+      alert("Please enter numerals without commas in all of the fields.");
+      }
+      if (cur_lib == 0 || cur_lib.match(/[^$.\d]/)) {//condition to display zero if denominator of the ratio is empty or invalid
+      document.getElementById("CurRatio").innerHTML = 0;
+      }
+      else {//conditional if values are entered right
+      document.getElementById("CurRatio").innerHTML = Math.round((cur_asts / cur_lib) * 100) / 100;
+      }
+      if (cur_lib2 == 0 || cur_lib2.match(/[^$.\d]/)) {//condition to display zero if denominator of the ratio is empty or invalid
+      document.getElementById("QuickRatio").innerHTML = 0;
+      }
+      else {//conditional if values are entered right
+      document.getElementById("QuickRatio").innerHTML = Math.round((cash_equiv / cur_lib2) * 100) / 100;
+	  }
+      if (avg_lib == 0 || avg_lib.match(/[^$.\d]/)) {//condition to display zero if denominator of the ratio is empty or invalid
+      document.getElementById("CashDebtCov").innerHTML = 0;
+      }
+      else {//conditional if values are entered right
+      document.getElementById("CashDebtCov").innerHTML = Math.round((net_cash / avg_lib) * 100) / 100;
+	  }
+      if (avg_rec == 0 || avg_rec.match(/[^$.\d]/)) {//condition to display zero if denominator of the ratio is empty or invalid
+      document.getElementById("AcctRecTurnover").innerHTML = 0;
+      }
+      else {//conditional if values are entered right
+      document.getElementById("AcctRecTurnover").innerHTML = Math.round((net_sales / avg_rec) * 100) / 100;
+	  }
+      if (avg_inv == 0 || avg_inv.match(/[^$.\d]/)) {//condition to display zero if denominator of the ratio is empty or invalid
+      document.getElementById("InvTurnover").innerHTML = 0;
+      }
+      else {//conditional if values are entered right
+      document.getElementById("InvTurnover").innerHTML = Math.round((cogs / avg_inv) * 100) / 100;
+	  }
+      if (avg_asts == 0 || avg_asts.match(/[^$.\d]/)) {//condition to display zero if denominator of the ratio is empty or invalid
+      document.getElementById("AstsTurnover").innerHTML = 0;
+      }
+      else {//conditional if values are entered right
+      document.getElementById("AstsTurnover").innerHTML = Math.round((net_sales2 / avg_asts) * 100) / 100;
+	  }
+      if (net_sales3 == 0 || net_sales3.match(/[^$.\d]/)) {//condition to display zero if denominator of the ratio is empty or invalid
+      document.getElementById("ProfitMargin").innerHTML = 0;
+      }
+      else {//conditional if values are entered right
+      document.getElementById("ProfitMargin").innerHTML = Math.round((net_inc / net_sales3) * 100) / 100;
+	  }
+      if (avg_asts2 == 0 || avg_asts2.match(/[^$.\d]/)) {//condition to display zero if denominator of the ratio is empty or invalid
+      document.getElementById("ReturnOnAssets").innerHTML = 0;
+      }
+      else {//conditional if values are entered right
+      document.getElementById("ReturnOnAssets").innerHTML = Math.round((net_inc2 / avg_asts2) * 100) / 100;
+	  }
+      if (ern_per_shr == 0 || ern_per_shr.match(/[^$.\d]/)) {//condition to display zero if denominator of the ratio is empty or invalid
+      document.getElementById("PriceEarnings").innerHTML = 0;
+      }
+      else {//conditional if values are entered right
+      document.getElementById("PriceEarnings").innerHTML = Math.round((mrkt_pr_stck / ern_per_shr) * 100) / 100;
+	  }
+      if (net_inc3 == 0 || net_inc3.match(/[^$.\d]/)) {//condition to display zero if denominator of the ratio is empty or invalid
+      document.getElementById("PayoutRatio").innerHTML = 0;
+      }
+      else {//conditional if values are entered right
+      document.getElementById("PayoutRatio").innerHTML = Math.round((cash_div / net_inc3) * 100) / 100;
+	  }
+      if (tot_asts == 0 || tot_asts.match(/[^$.\d]/)) {//condition to display zero if denominator of the ratio is empty or invalid
+      var liquidity = 0;
+      var re_ta = 0;
+      var leverage = 0;
+      var asts_turnover = 0;
+      document.getElementById("DebtToAsts").innerHTML = 0;
+      document.getElementById("WorkCap/Tot_Asts").innerHTML = 0;
+      document.getElementById("RetainEarn/Tot_Asts").innerHTML = 0;
+      document.getElementById("EBIT/Tot_Asts").innerHTML = 0;
+      document.getElementById("Sales/Tot_Asts").innerHTML = 0;
+      document.getElementById("Z-Score").innerHTML = liquidity + re_ta + leverage + asts_turnover + debt_to_equity;
+      }
+      else {//conditional if values are entered right
+      document.getElementById("Z-Score").innerHTML = liquidity + re_ta + leverage + asts_turnover + debt_to_equity;
+      document.getElementById("DebtToAsts").innerHTML = Math.round((tot_liab / tot_asts) * 100) / 100;
+	  }
+      if (intrst_exp == 0 || intrst_exp.match(/[^$.\d]/)) {//condition to display zero if denominator of the ratio is empty or invalid
+      document.getElementById("TimesInterestEarned").innerHTML = 0;
+      }
+      else {//conditional if values are entered right
+      document.getElementById("TimesInterestEarned").innerHTML = Math.round((ebit / intrst_exp) * 100) / 100;
+	  }
+      if (avg_liab == 0 || avg_liab.match(/[^$.\d]/)) {//condition to display zero if denominator of the ratio is empty or invalid
+      document.getElementById("CashDebtCover").innerHTML = 0;
+      }
+      else {//conditional if values are entered right
+      document.getElementById("CashDebtCover").innerHTML = Math.round((net_cash2 / avg_liab) * 100) / 100;
+	  }
+      if (outst_shrs == 0 || outst_shrs.match(/[^$.\d]/)) {//condition to display zero if denominator of the ratio is empty or invalid
+      document.getElementById("BookValuePerShare").innerHTML = 0;
+      }
+      else {//conditional if values are entered right
+      document.getElementById("BookValuePerShare").innerHTML = Math.round((com_stk_eqt / outst_shrs) * 100) / 100;
+	  }
+      if (tot_liab == 0 || tot_liab.match(/[^$.\d]/)) {//condition to display zero if denominator of the ratio is empty or invalid
+      var debt_to_equity = 0;
+      document.getElementById("MVEquity/Tot_Liab").innerHTML = 0;
+      document.getElementById("Z-Score").innerHTML = liquidity + re_ta + leverage + asts_turnover + debt_to_equity;
+      }
+      else {//conditional if values are entered right
+      document.getElementById("Z-Score").innerHTML = liquidity + re_ta + leverage + asts_turnover + debt_to_equity;
+      }
+ }
+ 
+function clearInput() {// function to reset all of the fields   
+      document.getElementById("Form").reset();
+      document.getElementById("CurRatio").innerHTML = "";
+      document.getElementById("QuickRatio").innerHTML = "";
+      document.getElementById("CashDebtCov").innerHTML = "";
+      document.getElementById("AcctRecTurnover").innerHTML = "";
+      document.getElementById("InvTurnover").innerHTML = "";
+      document.getElementById("AstsTurnover").innerHTML = "";
+      document.getElementById("ProfitMargin").innerHTML = "";
+      document.getElementById("ReturnOnAssets").innerHTML = "";
+      document.getElementById("PriceEarnings").innerHTML = "";
+      document.getElementById("PayoutRatio").innerHTML = "";
+      document.getElementById("DebtToAsts").innerHTML = "";
+      document.getElementById("TimesInterestEarned").innerHTML = "";
+      document.getElementById("CashDebtCover").innerHTML = "";
+      document.getElementById("BookValuePerShare").innerHTML = "";
+      document.getElementById("WorkCap/Tot_Asts").innerHTML = "";
+      document.getElementById("RetainEarn/Tot_Asts").innerHTML = "";
+      document.getElementById("EBIT/Tot_Asts").innerHTML = "";
+      document.getElementById("Sales/Tot_Asts").innerHTML = "";
+      document.getElementById("MVEquity/Tot_Liab").innerHTML = "";
+      document.getElementById("Z-Score").innerHTML = "";
+ }
+</script>
+
+</html>
