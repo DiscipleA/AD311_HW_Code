@@ -1,0 +1,46 @@
+{
+  "name": "exploring-package.json",
+  "version": "1.0.0",
+  "description": "A basic Node.js project to learn package.json",
+  "keywords": [
+    "node",
+    "npm",
+    "express",
+    "package-json",
+    "assignment"
+  ],
+  "homepage": "https://github.com/DiscipleA/AD311_HW_Code/tree/main#readme",
+  "bugs": {
+    "url": "https://github.com/DiscipleA/AD311_HW_Code/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DiscipleA/AD311_HW_Code.git#main"
+  },
+  "license": "UNLICENSED",
+  "author": "Dmitriy Chernichenko",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "jest": "jest",
+    "hello": "node -e \"console.log('Hello from an npm script!')\"",
+    "dependenciesVSdevDependencies": "node -e \"console.log('This is a note about the differences between dependencies → which are needed when the app runs, and devDependencies → which are needed to build/test/lint the app while developing.')\"",
+    "versioning": "node -e \"console.log('This is a note about: → Version field identifies the release of the project and supports publishing, tracking changes, and consistent deployments. → Semantic Versioning uses MAJOR.MINOR.PATCH to communicate breaking changes, new features, bug fixes... → Dependency versions often use ranges like ^ and ~ so npm can safely update packages within compatible versions.')\"",
+    "other_fields_discussion": "node -e \"console.log('This is a note about explaining how repository, keywords, license and athor fields are useful for distribution and maintenance: →  Dirstribution: <repository> gives the official source location <keywords> improve discoverability in npm searches <license> clarifies what users are legally allowed to do <author> provides ownership and credit. → Maintenance: <repository> lets users report issues, submit pull requests, and view history <author> signals who to contact / who is responsible <license> prevents confusion and adoption blockers (“Can I use this in my project?”) <keywords> help the right audience find it (which increases useful feedback/contributions)')\"",
+    "purpose_package-lock": "node -e \"console.log('This is a note explaining purpuse of package-lock: <1) Reproducible installs> **Everyone gets the same dependency versions: teammates, graders/instructors, CI servers (GitHub Actions, etc.), production deployments. <2) Fewer random breaks from updates> Even if a dependency releases a buggy patch version, your project won’t suddenly start using it unless you intentionally update. <3) Faster installs> npm can install faster because the lockfile tells it exactly what to fetch, instead of re-solving versions from scratch. <4) Better security + auditing> Lockfiles include integrity/resolution info, which helps npm verify what it downloads. Also, auditing tools can be more precise about what’s installed.')\"",
+    "importance_package-lock": "node -e \"console.log('This is a note explains the importance of package-lock in version control: You should commit package-lock.json because: <1) Consistency:> → teammates and graders install the exact same dependency versions. <2) Reliable CI:> → builds/tests in GitHub Actions (or any CI) use the same versions as your local machine. <3) Easier debugging:> → if something breaks, you can track exactly which dependency version changed. <4) Controlled updates:> → dependency updates happen when you choose (like running npm update or reinstalling with changed ranges), not randomly. ')\"",
+    "test": "echo \"No tests specified\" && exit 0",
+    "report": "node report.js"
+  },
+  "dependencies": {
+    "express": "^5.2.1"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0"
+  },
+  "engines": {
+    "node": ">=24.12.0",
+    "npm": ">=11.6.2"
+  }
+}
