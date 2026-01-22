@@ -1,0 +1,27 @@
+{
+  "name": "basic_express_server",
+  "version": "1.0.0",
+  "description": "A basic Node.js project to learn express server configuration",
+  "keywords": [
+    "node",
+    "npm",
+    "express",
+    "assignment"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "github.com/DiscipleA/AD311_HW_Code/tree/main/Week3/Basic_Express_Server"
+  },
+  "license": "UNLICENSED",
+  "author": "Dmitriy Chernichenko",
+  "type": "commonjs",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "test": "echo \\\"No tests specified\\\" && exit 0",
+    "report": "node report.js"
+  },
+  "dependencies": {
+    "express": "^5.2.1"
+  }
+}
