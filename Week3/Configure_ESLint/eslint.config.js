@@ -15,7 +15,7 @@ export default defineConfig([
       semi: ['error', 'always'],
 
       // Quotes: "single" or "double"
-      quotes: ['error', 'single', { avoidEscape: true, allowTemplateLiterals: true }],
+      quotes: ['error', 'double', { avoidEscape: true, allowTemplateLiterals: true }],
     },
   },
 ]);
