@@ -59,4 +59,6 @@ This project includes a report.js file that prints the written report to the ter
 ```bash
 npm run report
 ```
+## 🎥 Demo
+<img width="1679" height="1024" alt="image" src="https://github.com/user-attachments/assets/aaed9e69-da9a-44e6-afb5-e6cce62d6f51" />
 
