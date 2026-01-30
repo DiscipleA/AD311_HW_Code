@@ -9,25 +9,24 @@ function reverseString(str) {
 
     const recurse = reverseString(ramPortion);
 
-
     return lastChar + recurse;
 }
 
 //Test 1
-console.log("Test 1 (Base): ", reverseString("Dmitriy"));
+console.log("Test 1 (Normal) passed =>", reverseString("Dmitriy") === "yirtimD");
 
 //Test 2
-console.log("Test 2 (Base): ", reverseString("XYZABC"));
+console.log("Test 2 (Normal) passed =>", reverseString("XYZABC") === "CBAZYX");
 
 //Test 3
-console.log("Test 3 (Base): ", reverseString("yirtimd"));
+console.log("Test 3 (Normal) passed =>", reverseString("yirtimd") === "dmitriy");
 
 //Test 1
-console.log("Test 1 (Edge): ", reverseString(""));
+console.log("Test 1 (Edge) passed =>", reverseString("") === "");
 
 //Test 2
-console.log("Test 2 (Edge): ", reverseString("q"));
+console.log("Test 2 (Edge) passed =>", reverseString("q") === "q");
 
 //Test 3
-console.log("Test 3 (Edge): ", reverseString("racecar"));
+console.log("Test 3 (Edge) passed =>", reverseString("racecar") === "racecar");
 
