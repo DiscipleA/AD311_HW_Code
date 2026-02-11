@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dog Breeds</title>
+</head>
+<body>
+
+    <h1>Dog Breeds</h1>
+
+    <div style="display: flex; gap: 24px;">
+        <div style="width: 40%;">
+            <h2>Breed List</h2>
+            <ul id="breed-list"></ul>
+        </div>    
+
+    
+        <div style="width: 60%;">
+            <h2>Breed Details</h2>
+            <div id="breed-details">Click a breed to see details.</div>
+            <p id="error-message"></p>
+        </div>
+    </div>
+
+    <h2>Random Dog Facts</h2>
+    <div id="facts-container"></div>
+    <button id="refresh-facts">Get New Facts</button>
+    <p id="facts-error"></p>
+
+    <h2>Dog Groups</h2>
+    <ul id="groups-list"></ul>
+    <p id="groups-error"></p>
+
+    <script src="./fetchDogBreeds.js"></script>
+    
+</body>
+</html>

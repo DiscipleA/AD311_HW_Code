@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Crypto Correlation & Alerts</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
+    <style>
+        :root { --bg: #0f0f0f; --card: #1a1a1a; --btc: #f39c12; --eth: #9b59b6; --doge: #f1c40f; }
+        body { font-family: sans-serif; background: var(--bg); color: #fff; margin: 0; padding: 20px; text-align: center; }
+        
+        .status-bar { background: #151515; padding: 12px; border-bottom: 1px solid #333; margin-bottom: 20px; display: flex; justify-content: center; gap: 30px; font-size: 0.9rem; }
+        
+        .main-chart-container { 
+            background: var(--card); border: 1px solid #333; border-radius: 12px; 
+            max-width: 900px; margin: 0 auto 30px auto; padding: 20px; height: 350px; 
+        }
+
+        .card-container { display: flex; justify-content: center; gap: 20px; flex-wrap: wrap; }
+        .card { background: var(--card); border: 2px solid #333; border-radius: 12px; padding: 20px; width: 260px; transition: 0.3s; }
+        .alert-active { border-color: #f1c40f !important; box-shadow: 0 0 20px #f1c40f; animation: pulse 1.5s infinite; }
+        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.8; } 100% { opacity: 1; } }
+
+        .price { font-size: 2rem; font-weight: bold; margin: 5px 0; }
+        .change { font-weight: bold; font-size: 1.1rem; margin-bottom: 15px; }
+        
+        .alert-input { background: #000; color: #f1c40f; border: 1px solid #444; padding: 10px; width: 85%; border-radius: 5px; text-align: center; font-weight: bold; }
+        button { background: #3498db; color: white; border: none; padding: 12px 25px; border-radius: 8px; cursor: pointer; margin-top: 30px; font-weight: bold; }
+        button:disabled { opacity: 0.5; }
+    </style>
+</head>
+<body>
+
+    <div class="status-bar">
+        <span id="status-text" style="color:#2ecc71">● Live</span>
+        <span>Global Cap: <span id="total-cap" style="color:#3498db">--</span></span>
+        <span>BTC Dom: <span id="btc-dom" style="color:#3498db">--</span></span>
+    </div>
+
+    <div class="main-chart-container">
+        <h3 style="margin-top:0; color:#888;">7-Day Price Correlation (%)</h3>
+        <canvas id="correlationChart"></canvas>
+    </div>
+
+    <div class="card-container">
+        <div id="btc-card" class="card">
+            <h3 style="color:var(--btc)">BITCOIN (BTC)</h3>
+            <div id="btc-price" class="price">--</div>
+            <div id="btc-change" class="change">--</div>
+            <input type="number" id="btc-alert" class="alert-input" placeholder="Alert Price ($)" oninput="checkAlerts()">
+        </div>
+        <div id="eth-card" class="card">
+            <h3 style="color:var(--eth)">ETHEREUM (ETH)</h3>
+            <div id="eth-price" class="price">--</div>
+            <div id="eth-change" class="change">--</div>
+            <input type="number" id="eth-alert" class="alert-input" placeholder="Alert Price ($)" oninput="checkAlerts()">
+        </div>
+        <div id="doge-card" class="card">
+            <h3 style="color:var(--doge)">DOGECOIN (DOGE)</h3>
+            <div id="doge-price" class="price">--</div>
+            <div id="doge-change" class="change">--</div>
+            <input type="number" id="doge-alert" class="alert-input" placeholder="Alert Price ($)" oninput="checkAlerts()">
+        </div>
+    </div>
+
+    <button id="refresh-btn" onclick="updateData()">Refresh Market Data</button>
+
+    <script>
+        let correlationChart = null;
+        let pricesStore = { bitcoin: 0, ethereum: 0, dogecoin: 0 };
+
+        function setStatus(message, color = "orange") {
+            const el = document.getElementById("status-text");
+            if (!el) return;
+            el.innerText = message;
+            el.style.color = color;
+        }
+
+        // Tries to coerce to a real number; returns null if invalid
+        function safeNumber(value) {
+            const n = Number(value);
+            return Number.isFinite(n) ? n : null;
+        }
+
+
+        async function updateData() {
+            const btn = document.getElementById("refresh-btn");
+            btn.disabled = true;
+
+            try {
+                setStatus("Loading...", "#888");
+
+                const res = await fetch("/api/prices", { cache: "no-store" });
+
+                // If server sent non-2xx, try to read JSON error; otherwise throw generic
+                if (!res.ok) {
+                let errMsg = `Server error (${res.status}).`;
+                try {
+                    const errBody = await res.json();
+                    if (errBody?.error) errMsg = errBody.error;
+                } catch {
+                    // ignore JSON parse failures
+                }
+                setStatus(errMsg, "orange");
+                return;
+                }
+
+                const result = await res.json();
+
+                // If backend returned { error: "..."} explicitly
+                if (result?.error) {
+                setStatus(result.error, "orange");
+                return;
+                }
+
+                // Validate presence of top-level objects
+                const prices = result?.prices;
+                const charts = result?.charts;
+                const global = result?.global;
+
+                if (!prices || typeof prices !== "object") {
+                setStatus("Invalid prices data received.", "orange");
+                return;
+                }
+                if (!Array.isArray(charts)) {
+                setStatus("Invalid chart data received.", "orange");
+                return;
+                }
+                if (!global || typeof global !== "object") {
+                setStatus("Invalid global market data received.", "orange");
+                return;
+                }
+
+                // Update status
+                setStatus("● Live", "#2ecc71");
+
+                // Safely render global stats
+                const marketCapUsd = safeNumber(global?.total_market_cap?.usd);
+                const btcDom = safeNumber(global?.market_cap_percentage?.btc);
+
+                document.getElementById("total-cap").innerText =
+                marketCapUsd !== null ? `$${Math.round(marketCapUsd).toLocaleString()}` : "N/A";
+
+                document.getElementById("btc-dom").innerText =
+                btcDom !== null ? `${btcDom.toFixed(1)}%` : "N/A";
+
+                const config = [
+                { id: "btc", key: "bitcoin", dec: 2, color: "#f39c12" },
+                { id: "eth", key: "ethereum", dec: 2, color: "#9b59b6" },
+                { id: "doge", key: "dogecoin", dec: 5, color: "#f1c40f" },
+                ];
+
+                const datasets = [];
+
+                config.forEach((coin) => {
+                const priceInfo = prices?.[coin.key];
+
+                // Validate coin priceInfo structure
+                const usd = safeNumber(priceInfo?.usd);
+                const change24h = safeNumber(priceInfo?.usd_24h_change);
+
+                // Store price if valid (used by alerts)
+                pricesStore[coin.key] = usd ?? 0;
+
+                // Update UI with safe fallbacks
+                if (usd === null || change24h === null) {
+                    document.getElementById(`${coin.id}-price`).innerText = "N/A";
+                    document.getElementById(`${coin.id}-price`).style.color = "#888";
+                    document.getElementById(`${coin.id}-change`).innerText = "N/A";
+                    document.getElementById(`${coin.id}-change`).style.color = "#888";
+                } else {
+                    const color = change24h >= 0 ? "#2ecc71" : "#e74c3c";
+                    document.getElementById(`${coin.id}-price`).innerText =
+                    `$${usd.toLocaleString(undefined, { minimumFractionDigits: coin.dec })}`;
+                    document.getElementById(`${coin.id}-price`).style.color = color;
+
+                    document.getElementById(`${coin.id}-change`).innerText =
+                    `${change24h >= 0 ? "+" : ""}${change24h.toFixed(2)}%`;
+                    document.getElementById(`${coin.id}-change`).style.color = color;
+                }
+
+                // Process chart data safely
+                const chartInfo = charts.find((c) => c?.id === coin.key);
+                const spark = chartInfo?.sparkline_in_7d?.price;
+
+                if (Array.isArray(spark) && spark.length > 1) {
+                    const baseline = safeNumber(spark[0]);
+
+                    // Avoid division by zero / invalid baseline
+                    if (baseline !== null && baseline !== 0) {
+                    const pctData = spark
+                        .map((p) => safeNumber(p))
+                        .map((p) => (p === null ? null : ((p - baseline) / baseline) * 100))
+                        .filter((v) => v !== null);
+
+                    if (pctData.length > 1) {
+                        datasets.push({
+                        label: coin.key.toUpperCase(),
+                        data: pctData,
+                        borderColor: coin.color,
+                        borderWidth: 2,
+                        pointRadius: 0,
+                        tension: 0.3,
+                        });
+                    }
+                    }
+                }
+                });
+
+                // Render chart only if we have datasets
+                if (datasets.length > 0) {
+                renderChart(datasets);
+                }
+
+                checkAlerts();
+            } catch (e) {
+                console.error("Dashboard Error:", e);
+                setStatus("Network error: could not load data. Is the server running?", "orange");
+            } finally {
+                btn.disabled = false;
+            }
+        }
+
+
+        function renderChart(datasets) {
+            const ctx = document.getElementById('correlationChart').getContext('2d');
+            if (correlationChart) correlationChart.destroy();
+            
+            correlationChart = new Chart(ctx, {
+                type: 'line',
+                data: { labels: datasets[0].data.map((_, i) => i), datasets: datasets },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        x: { 
+                            grid: { color: '#333' },
+                            ticks: { color: '#888', callback: v => '' }
+                        },
+                        y: { 
+                            grid: { color: '#333' },
+                            ticks: { color: '#888', callback: v => v + '%' }
+                        }
+                    },
+                    plugins: { legend: { labels: { color: '#fff', padding: 5 } } }
+                }
+            });
+        }
+
+        function checkAlerts() {
+            const mapIdToKey = {
+                btc: "bitcoin",
+                eth: "ethereum",
+                doge: "dogecoin",
+            };
+
+            ["btc", "eth", "doge"].forEach((id) => {
+                const input = document.getElementById(`${id}-alert`).value;
+                const target = Number(input);
+                const key = mapIdToKey[id];
+                const current = pricesStore[key];
+                const card = document.getElementById(`${id}-card`);
+
+                // Only trigger if target is a real positive number and current is valid
+                if (Number.isFinite(target) && target > 0 && Number.isFinite(current) && current >= target) {
+                card.classList.add("alert-active");
+                } else {
+                card.classList.remove("alert-active");
+                }
+            });
+        }
+
+
+        window.onload = updateData;
+    </script>
+</body>
+</html>

@@ -1,0 +1,33 @@
+{
+  "name": "integrating_crypto_api",
+  "version": "1.0.0",
+  "description": "A small web application that integrates with a third-party API for crypto currency prices",
+  "main": "index.js",
+  "scripts": {
+    "test": "NODE_ENV=test node --experimental-vm-modules ./node_modules/.bin/jest",
+    "start": "node index.js"
+  },
+  "keywords": [
+    "node",
+    "npm",
+    "express",
+    "assignment",
+    "crypto",
+    "currency",
+    "api"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "github.com/DiscipleA/AD311_HW_Code/tree/main/Week5/Integrating_Crypto_API"
+  },
+  "author": "Dmitriy Chernichenko",
+  "license": "UNLICENSED",
+  "type": "module",
+  "dependencies": {
+    "express": "^5.2.1"
+  },
+  "devDependencies": {
+    "jest": "^30.2.0",
+    "supertest": "^7.2.2"
+  }
+}

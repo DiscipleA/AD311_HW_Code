@@ -1,0 +1,28 @@
+{
+  "name": "dog_facts_api_replica",
+  "version": "1.0.0",
+  "description": "A simplified version of the Dog Facts API using Node.js and Express.js.",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "apidocs": "node apiDocs.js",
+    "test": "note test.js"
+  },
+  "keywords": [
+    "node",
+    "npm",
+    "express",
+    "assignment",
+    "API"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "github.com/DiscipleA/AD311_HW_Code/tree/main/Week5/Dog_Facts_API_Replica"
+  },
+  "author": "Dmitriy Chernichenko",
+  "license": "UNLICENSED",
+  "type": "module",
+  "dependencies": {
+    "express": "^5.2.1"
+  }
+}
