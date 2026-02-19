@@ -40,7 +40,7 @@ src/
 - Basic UI styling for cleaner layout
 - Automated tests using Vitest + React Testing Library (industry-standard for Vite)
 
-## 🚀 How it Works
+## 🛠️ How to Run
 
 ### 1) Install dependencies
 ```bash
