@@ -52,5 +52,6 @@ The following videos demonstrate the implementation, testing phase, and logic wa
 
 | Video Title | Description | Link |
 | :--- | :--- | :--- |
-| **Stack Logic Explained & Test Code** | Deep dive into how LIFO applies to Undo/Redo. | [Watch on YouTube](https://youtube.com/link_here) |
-| **Code Walkthrough** | Explanation of the TextOperation & SimpleTextEditor classes. | [Watch on YouTube](https://youtube.com/link_here) |
+| **Stack Logic Explained** | Deep dive into how LIFO applies to Undo/Redo. | [Watch on YouTube](https://youtu.be/LEd_aU-OM_4) |
+| **Test Code** | Code applicton of 3 Normal & Edge Tests. | [Watch on YouTube](https://youtu.be/1sb54X_KYiA) |
+| **Code Walkthrough** | Explanation of the TextOperation & SimpleTextEditor classes. | [Watch on YouTube](https://youtu.be/vZgi6qjSF6Y) |
