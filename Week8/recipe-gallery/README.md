@@ -1,16 +1,89 @@
-# React + Vite
+# Recipe Gallery
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A React-based Recipe Gallery application that displays a curated list of recipes using static data. This project focuses on practicing React list rendering with `map()` and building a clean, responsive UI without state management or interactivity.
 
-Currently, two official plugins are available:
+## Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- Displays a curated list of recipes
+- Renders recipe cards dynamically from static data
+- Shows recipe images, titles, and ingredient lists
+- Uses React `map()` for list rendering
+- Uses unique `key` props for efficient rendering
+- Responsive layout using CSS Grid
+- Clean and accessible semantic structure
 
-## React Compiler
+## How It Works
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+The application uses a static `recipes` array where each recipe is represented as an object with the following properties:
 
-## Expanding the ESLint configuration
+- `id`: Unique identifier for the recipe
+- `title`: Recipe name
+- `ingredients`: Array of ingredients
+- `image`: URL of the recipe image
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+The `RecipeGallery` component imports this array and uses `map()` to generate a recipe card for each recipe. Each card includes:
+
+- A recipe image
+- A recipe title
+- A list of ingredients
+
+This project intentionally avoids state and interactivity so the focus stays on understanding static data rendering in React.
+
+## Project Structure
+
+```text
+recipe-gallery/
+├── src/
+│   ├── components/
+│   │   └── RecipeGallery.jsx
+│   ├── data/
+│   │   └── recipes.js
+│   ├── test/
+│   │   └── setup.js
+│   ├── App.jsx
+│   ├── main.jsx
+│   └── index.css
+├── tests/
+│   └── RecipeGallery.test.jsx
+├── package.json
+├── vite.config.js
+└── README.md
+```
+
+## How to Run
+
+### 1. Clone or download the project
+```bash
+git clone <your-repository-url>
+cd recipe-gallery
+```
+
+### 2. Install dependencies
+```bash
+npm install
+```
+
+### 3. Start the development server
+```bash
+npm run dev
+```
+
+### 4. Open the app in your browser
+
+Vite will provide a local development URL, usually:
+```bash
+http://localhost:5173
+```
+
+## How to Run Tests
+```bash
+npm run test
+```
+To run tests with UI:
+```bash
+npm run test:ui
+```
+To generate test coverage:
+```bash
+npm run coverage
+```

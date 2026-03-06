@@ -2,17 +2,31 @@ import FeatureToggle from "./components/FeatureToggle";
 
 function App() {
   return (
-    <div style={{ padding: "20px" }}>
+    <div style={{ padding: "20px", fontFamily: "Arial" }}>
       <h1>Feature Toggle Demo</h1>
 
+      {/* Feature 1 */}
       <FeatureToggle
         isEnabled={true}
         featureName="New Dashboard"
       />
 
+      {/* Feature 2 */}
       <FeatureToggle
         isEnabled={false}
         featureName="Advanced Analytics"
+      />
+
+      {/* Feature 3 */}
+      <FeatureToggle
+        isEnabled={true}
+        featureName="Dark Mode"
+      />
+
+      {/* Feature 4 */}
+      <FeatureToggle
+        isEnabled={false}
+        featureName="AI Recommendations"
       />
     </div>
   );

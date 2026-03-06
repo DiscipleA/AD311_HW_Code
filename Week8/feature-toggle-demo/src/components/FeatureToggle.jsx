@@ -1,14 +1,33 @@
-
 function FeatureToggle({ isEnabled, featureName }) {
-  // Conditional rendering based on the isEnabled prop
+  const safeFeatureName = featureName?.trim();
+
   if (isEnabled) {
-    return <p>{featureName}</p>;
+    return <p>{safeFeatureName || "Unnamed Feature"}</p>;
   }
 
-  return <p>Feature {featureName} is disabled</p>;
+  return (
+    <p>
+      {safeFeatureName
+        ? `Feature ${safeFeatureName} is disabled`
+        : "Feature is disabled"}
+    </p>
+  );
 }
 
 export default FeatureToggle;
+
+//Step 3
+
+// function FeatureToggle({ isEnabled, featureName }) {
+//   // Conditional rendering based on the isEnabled prop
+//   if (isEnabled) {
+//     return <p>{featureName}</p>;
+//   }
+
+//   return <p>Feature {featureName} is disabled</p>;
+// }
+
+// export default FeatureToggle;
 
 
 // src/components/FeatureToggle.jsx
