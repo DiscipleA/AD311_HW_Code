@@ -1,9 +1,9 @@
-# Recipe Gallery
+# Assignment AD311: Building a Recipe Gallery in React
 
+## 📂 Project Overview
 A React-based Recipe Gallery application that displays a curated list of recipes using static data. This project focuses on practicing React list rendering with `map()` and building a clean, responsive UI without state management or interactivity.
 
-## Features
-
+## 🚀 Features
 - Displays a curated list of recipes
 - Renders recipe cards dynamically from static data
 - Shows recipe images, titles, and ingredient lists
@@ -12,8 +12,7 @@ A React-based Recipe Gallery application that displays a curated list of recipes
 - Responsive layout using CSS Grid
 - Clean and accessible semantic structure
 
-## How It Works
-
+## 🛠️ How it Works
 The application uses a static `recipes` array where each recipe is represented as an object with the following properties:
 
 - `id`: Unique identifier for the recipe
@@ -29,8 +28,7 @@ The `RecipeGallery` component imports this array and uses `map()` to generate a 
 
 This project intentionally avoids state and interactivity so the focus stays on understanding static data rendering in React.
 
-## Project Structure
-
+## 📁 Project Structure
 ```text
 recipe-gallery/
 ├── src/
@@ -50,8 +48,7 @@ recipe-gallery/
 └── README.md
 ```
 
-## How to Run
-
+## 📦 How to Run
 ### 1. Clone or download the project
 ```bash
 git clone <your-repository-url>
@@ -75,15 +72,20 @@ Vite will provide a local development URL, usually:
 http://localhost:5173
 ```
 
-## How to Run Tests
+### 5. Run Tests
 ```bash
 npm run test
 ```
 To run tests with UI:
 ```bash
-npm run test:ui
+npx vitest --ui
 ```
 To generate test coverage:
 ```bash
 npm run coverage
 ```
+
+## 🎥 Project Demonstration
+| Component | Walkthrough Link |
+| :--- | :--- |
+| **Full Walkthrough & Tests** | [Watch on YouTube](https://youtu.be/w-XQwupWHhM) |

@@ -19,7 +19,7 @@ function App() {
 
       {/* Feature 3 */}
       <FeatureToggle
-        isEnabled={true}
+        isEnabled={false}
         featureName="Dark Mode"
       />
 

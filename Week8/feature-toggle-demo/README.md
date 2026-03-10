@@ -1,7 +1,6 @@
-# Feature Toggle Component in React
+# Assignment AD311: Creating a Feature Toggle Component in React
 
-## Overview
-
+## 📂 Project Overview
 This project demonstrates how to implement a **Feature Toggle system in React** using a reusable component.
 
 Feature toggles allow developers to enable or disable features dynamically without changing the underlying codebase.
@@ -10,8 +9,7 @@ This pattern is widely used in modern software development for controlled featur
 
 ---
 
-## Features
-
+## 🚀 Features
 * Reusable `FeatureToggle` React component
 * Conditional rendering based on feature flags
 * Multiple simulated feature toggles
@@ -20,8 +18,7 @@ This pattern is widely used in modern software development for controlled featur
 
 ---
 
-## How It Works
-
+## 🛠️ How it Works
 The `FeatureToggle` component accepts two props:
 
 | Prop        | Type    | Description                              |
@@ -45,7 +42,7 @@ Feature New Dashboard is disabled
 
 ---
 
-## Project Structure
+## 📁 Project Structure
 
 ```
 src
@@ -58,7 +55,7 @@ src
 
 ---
 
-## How to Run the Project
+## 📦 How to Run
 
 ### 1. Clone the repository
 
@@ -92,16 +89,14 @@ http://localhost:5173
 
 ---
 
-## Demo Videos
-
-| Demo                         | Link                                |
-| ---------------------------- | ----------------------------------- |
-| Running the Application      | https://youtube.com/YOUR_VIDEO_LINK |
-| Feature Toggle Demonstration | https://youtube.com/YOUR_VIDEO_LINK |
+## 🎥 Project Demonstration
+| Component | Walkthrough Link |
+| :--- | :--- |
+| **Full Walkthrough & Tests** | [Watch on YouTube](https://youtu.be/PByngvinGKs) |
 
 ---
 
-## Example Output
+### Example Output
 
 ```
 Feature Toggle Demo
@@ -114,7 +109,7 @@ Feature AI Recommendations is disabled
 
 ---
 
-## Future Improvements
+### Future Improvements
 
 * Integrate real feature flag services
 * Connect to backend feature management
