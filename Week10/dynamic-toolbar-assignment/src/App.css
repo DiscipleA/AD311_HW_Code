@@ -1,0 +1,124 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: Arial, Helvetica, sans-serif;
+  background: #111827;
+  /* background:
+    radial-gradient(circle at top right, rgba(255, 255, 255, 0.18), transparent 25%),
+    linear-gradient(135deg, #4f46e5, #7c3aed, #ec4899, #f59e0b); */
+  color: white;
+  min-height: 100vh;
+}
+
+#root {
+  min-height: 100vh;
+}
+
+.app-page {
+  min-height: 100vh;
+}
+
+.hero {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+}
+
+.hero-card {
+  max-width: 850px;
+  width: 100%;
+  background: #1f2937;
+  /* background: rgba(255, 255, 255, 0.16); */
+  backdrop-filter: blur(14px);
+  border: 1px solid #374151;
+  /* border: 1px solid rgba(255, 255, 255, 0.22); */
+  border-radius: 24px;
+  padding: 48px;
+  color: white;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25);
+  text-align: center;
+}
+
+.hero-badge {
+  display: inline-block;
+  margin: 0 0 18px;
+  padding: 8px 14px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.2);
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+
+.hero-title {
+  margin: 0;
+  font-size: clamp(2.4rem, 5vw, 4.5rem);
+  line-height: 1.1;
+  font-weight: 800;
+}
+
+.hero-highlight {
+  display: block;
+  color: #fef08a;
+  text-shadow: 0 4px 18px rgba(0, 0, 0, 0.18);
+}
+
+.hero-text {
+  margin: 22px auto 0;
+  max-width: 680px;
+  font-size: 1.1rem;
+  line-height: 1.7;
+  color: rgba(255, 255, 255, 0.92);
+}
+
+.hero-text code {
+  background: rgba(0, 0, 0, 0.18);
+  padding: 2px 8px;
+  border-radius: 8px;
+}
+
+.hero-callout {
+  margin-top: 36px;
+  display: flex;
+  justify-content: center;
+}
+
+.arrow-wrap {
+  display: inline-flex;
+  align-items: center;
+  gap: 16px;
+  background: rgba(255, 255, 255, 0.16);
+  border: 1px solid rgba(255, 255, 255, 0.24);
+  padding: 14px 22px;
+  border-radius: 18px;
+  animation: floatHint 1.8s ease-in-out infinite;
+}
+
+.arrow-text {
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.big-arrow {
+  font-size: 2.4rem;
+  line-height: 1;
+  color: #fde68a;
+  text-shadow: 0 0 16px rgba(253, 230, 138, 0.55);
+}
+
+@keyframes floatHint {
+  0% {
+    transform: translateX(0);
+  }
+  50% {
+    transform: translateX(-10px);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}

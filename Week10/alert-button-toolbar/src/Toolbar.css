@@ -1,0 +1,60 @@
+.toolbar-sidebar {
+  position: fixed;
+  top: 50%;
+  left: -275px;
+  transform: translateY(-50%);
+
+  width: 260px;
+  padding: 16px 14px;
+
+  background: linear-gradient(180deg, #1e293b, #0f172a);
+  border-radius: 0 16px 16px 0;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+
+  transition: left 0.3s ease-in-out;
+  z-index: 1000;
+}
+
+/* Slide out on hover */
+.toolbar-sidebar:hover {
+  left: 0;
+}
+
+.toolbar-content {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.toolbar-title {
+  margin: 0 0 8px;
+  font-size: 18px;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.alert-button {
+  width: 100%;
+  padding: 12px 16px;
+
+  border: none;
+  border-radius: 10px;
+
+  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  color: white;
+  font-size: 15px;
+  font-weight: 600;
+  text-align: left;
+
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease;
+}
+
+.alert-button:hover {
+  transform: translateX(4px);
+  box-shadow: 0 6px 16px rgba(99, 102, 241, 0.35);
+}
+
+.alert-button:active {
+  transform: scale(0.98);
+}
