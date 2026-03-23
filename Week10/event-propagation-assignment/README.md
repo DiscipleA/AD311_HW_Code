@@ -160,8 +160,3 @@ Add your video link(s) below after recording your assignment demo.
 | Demo Type           | Description                                    | YouTube Link                          |
 | ------------------- | ---------------------------------------------- | ------------------------------------- |
 | Project Walkthrough | Explain component structure and event bubbling | [Add Link Here](https://www.youtube.com/watch?v=5S1afofxrcM) |
-
-
-
-
-
